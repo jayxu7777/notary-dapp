@@ -30,8 +30,8 @@ export default function Guide() {
           <h3>Confirm</h3>
           <p>
             Once the transaction is mined, the content is permanently anchored on
-            Arbitrum One. Save the <b>content hash</b> shown on screen — that is how you
-            and anyone else retrieve the record later.
+            Arbitrum One. The <b>transaction hash</b> is saved automatically in your
+            wallet's recent activity — that is how you retrieve the record later.
           </p>
         </div>
 
@@ -39,10 +39,10 @@ export default function Guide() {
           <div className="guide-num">04</div>
           <h3>Query</h3>
           <p>
-            Switch to the <b>Query</b> tab, paste the content hash and optionally the
-            author address. The page reads the chain directly and shows the original
-            text, the UTC timestamp, the author address, and a link to the on-chain
-            transaction.
+            Switch to the <b>Query</b> tab, paste a transaction hash (from your wallet
+            history or anyone else's tx that called this contract). The page reads the
+            chain directly and shows the original text, the UTC timestamp, the author
+            address, and a link to the on-chain transaction.
           </p>
         </div>
       </div>
@@ -95,11 +95,21 @@ export default function Guide() {
       </details>
 
       <details className="faq">
-        <summary>What if I lose the hash?</summary>
+        <summary>What if I lose the transaction hash?</summary>
         <p>
-          You can always recompute it from the original text — it is simply{' '}
-          <code>keccak256(utf8(content))</code>. As long as you keep the original text,
-          you can derive the hash and look up the record.
+          Open your wallet → activity / recent transactions. Every notarization shows
+          up as a "Contract Interaction · store" entry — click it to see the
+          transaction hash. You can also browse all records of the Notary contract on
+          Arbiscan.
+        </p>
+      </details>
+
+      <details className="faq">
+        <summary>What is the "content hash" shown in results?</summary>
+        <p>
+          It is <code>keccak256(content)</code> — a cryptographic fingerprint of the
+          text. Anyone can recompute it from the original text and check that it
+          matches the on-chain record, proving the text has not been altered.
         </p>
       </details>
 
