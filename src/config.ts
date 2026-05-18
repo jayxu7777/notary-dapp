@@ -5,12 +5,11 @@
 import type { Address } from 'viem';
 
 // Contract address of the deployed Notary on Arbitrum One.
-// Leave as the zero address before deployment — UI will show a banner.
-export const CONTRACT_ADDRESS: Address = '0x0000000000000000000000000000000000000000';
+export const CONTRACT_ADDRESS: Address = '0x1AEc15eE8404fDaB823a899B067cb91380DBa8E1';
 
 // Block number at which the contract was deployed.
 // Used to bound getLogs queries (Arbitrum RPCs cap large ranges).
-export const DEPLOY_BLOCK: bigint = 0n;
+export const DEPLOY_BLOCK: bigint = 463974460n;
 
 // Get one for free at https://cloud.walletconnect.com — required for WalletConnect.
 // Injected wallets (MetaMask, Rabby) work without it.
