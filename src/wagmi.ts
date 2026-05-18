@@ -8,10 +8,12 @@ export const wagmiConfig = getDefaultConfig({
   projectId: WALLET_CONNECT_PROJECT_ID,
   chains: [arbitrum],
   transports: {
+    // publicnode is first because the official Arb RPC caps eth_getLogs at
+    // ~128 blocks per request, which breaks the Query feature once the
+    // contract is more than a couple minutes old. publicnode has no such cap.
     [arbitrum.id]: fallback([
+      http('https://arbitrum-one-rpc.publicnode.com'),
       http('https://arb1.arbitrum.io/rpc'),
-      http('https://arbitrum.llamarpc.com'),
-      http('https://rpc.ankr.com/arbitrum'),
     ]),
   },
   ssr: false,
