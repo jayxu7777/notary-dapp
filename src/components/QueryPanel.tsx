@@ -3,6 +3,8 @@ import { usePublicClient } from 'wagmi';
 import { type Address, type Hex, getAddress, parseAbiItem } from 'viem';
 import { ARBISCAN_BASE, CONTRACT_ADDRESS, DEPLOY_BLOCK } from '../config';
 
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+
 type Result = {
   contentHash: Hex;
   author: Address;
@@ -94,8 +96,16 @@ export default function QueryPanel() {
         onChange={(e) => setAuthor(e.target.value)}
       />
 
-      <button className="btn-primary" disabled={loading || !hash} onClick={onQuery}>
-        {loading ? 'Searching…' : 'Query'}
+      <button
+        className="btn-primary"
+        disabled={loading || !hash || CONTRACT_ADDRESS === ZERO_ADDRESS}
+        onClick={onQuery}
+      >
+        {CONTRACT_ADDRESS === ZERO_ADDRESS
+          ? 'Contract not deployed yet'
+          : loading
+          ? 'Searching…'
+          : 'Query'}
       </button>
 
       {error && <div className="error">{error}</div>}

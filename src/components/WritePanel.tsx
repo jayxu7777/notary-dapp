@@ -4,6 +4,8 @@ import { keccak256, stringToBytes } from 'viem';
 import { ARBISCAN_BASE, CONTRACT_ADDRESS, MAX_LENGTH } from '../config';
 import { NOTARY_ABI } from '../abi';
 
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+
 export default function WritePanel() {
   const { address, isConnected } = useAccount();
   const [text, setText] = useState('');
@@ -15,9 +17,10 @@ export default function WritePanel() {
   const byteLen = useMemo(() => new TextEncoder().encode(text).length, [text]);
   const hash = useMemo(() => (text ? keccak256(stringToBytes(text)) : null), [text]);
   const tooLong = byteLen > MAX_LENGTH;
+  const contractMissing = CONTRACT_ADDRESS === ZERO_ADDRESS;
 
   const onSubmit = () => {
-    if (!text || tooLong) return;
+    if (!text || tooLong || contractMissing) return;
     writeContract({
       address: CONTRACT_ADDRESS,
       abi: NOTARY_ABI,
@@ -50,10 +53,19 @@ export default function WritePanel() {
 
       <button
         className="btn-primary"
-        disabled={!isConnected || !text || tooLong || isPending || confirming}
+        disabled={
+          contractMissing ||
+          !isConnected ||
+          !text ||
+          tooLong ||
+          isPending ||
+          confirming
+        }
         onClick={onSubmit}
       >
-        {!isConnected
+        {contractMissing
+          ? 'Contract not deployed yet'
+          : !isConnected
           ? 'Connect wallet to write'
           : isPending
           ? 'Confirm in wallet…'
