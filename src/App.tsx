@@ -8,7 +8,11 @@ import { CONTRACT_ADDRESS } from './config';
 type Tab = 'write' | 'query';
 
 export default function App() {
-  const [tab, setTab] = useState<Tab>('write');
+  // Deep link: /?tx=0x… opens the Query tab with the hash pre-filled (QueryPanel
+  // reads the same param and auto-runs the lookup).
+  const [tab, setTab] = useState<Tab>(() =>
+    new URLSearchParams(window.location.search).has('tx') ? 'query' : 'write'
+  );
   const notDeployed = CONTRACT_ADDRESS === '0x0000000000000000000000000000000000000000';
 
   return (

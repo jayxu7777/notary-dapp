@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePublicClient } from 'wagmi';
 import { type Address, type Hex, parseEventLogs } from 'viem';
 import { ARBISCAN_BASE, CONTRACT_ADDRESS } from '../config';
@@ -17,10 +17,22 @@ type Result = {
 
 export default function QueryPanel() {
   const client = usePublicClient();
-  const [tx, setTx] = useState('');
+  // Deep link: /?tx=0x… pre-fills the hash and auto-runs the lookup below.
+  const [tx, setTx] = useState(
+    () => new URLSearchParams(window.location.search).get('tx') ?? ''
+  );
   const [result, setResult] = useState<Result | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const autoRan = useRef(false);
+  useEffect(() => {
+    if (!autoRan.current && client && tx) {
+      autoRan.current = true;
+      onQuery();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [client]);
 
   const onQuery = async () => {
     setError(null);
